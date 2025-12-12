@@ -1,0 +1,16 @@
+# Python venv
+.venv/
+venv/
+ENV/
+env/
+
+# OS / IDE
+__pycache__/
+*.pyc
+.DS_Store
+.idea/
+.vscode/
+
+# logs
+logs/
+*.log
