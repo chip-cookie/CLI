@@ -20,6 +20,8 @@ AI 에이전트 클래스들을 포함합니다.
 from app.agent.base import BaseAgent
 from app.agent.browser import BrowserAgent
 from app.agent.browser_helper import BrowserContextHelper
+from app.agent.checkpoint_handler import CheckpointHandler
+from app.agent.design_phases import DesignPhase, DesignState, UserAction
 from app.agent.mcp import MCPAgent
 from app.agent.mcp_mixin import MCPMixin
 from app.agent.react import ReActAgent
@@ -37,6 +39,11 @@ __all__ = [
     # Mixins and helpers
     "MCPMixin",
     "BrowserContextHelper",
+    "CheckpointHandler",
+    # Design workflow
+    "DesignPhase",
+    "DesignState",
+    "UserAction",
     # Specialized agents
     "BrowserAgent",
     "MCPAgent",
