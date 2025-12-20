@@ -1,22 +1,32 @@
-from typing import Dict, List, Optional
+"""
+Manus Agent - 범용 AI 에이전트
+=============================
+MCP 도구를 포함한 다양한 도구를 사용하여 범용 작업을 수행하는 에이전트입니다.
+"""
+
+from typing import Optional
 
 from pydantic import Field, model_validator
 
-from app.agent.browser import BrowserContextHelper
+from app.agent.browser_helper import BrowserContextHelper
+from app.agent.mcp_mixin import MCPMixin
 from app.agent.toolcall import ToolCallAgent
 from app.config import config
-from app.logger import logger
 from app.prompt.manus import NEXT_STEP_PROMPT, SYSTEM_PROMPT
 from app.tool import PlanningTool, Terminate, ToolCollection
 from app.tool.ask_human import AskHuman
 from app.tool.browser_use_tool import BrowserUseTool
-from app.tool.mcp import MCPClients, MCPClientTool
+from app.tool.mcp import MCPClients
 from app.tool.python_execute import PythonExecute
 from app.tool.str_replace_editor import StrReplaceEditor
 
 
-class Manus(ToolCallAgent):
-    """A versatile general-purpose agent with support for both local and MCP tools."""
+class Manus(MCPMixin, ToolCallAgent):
+    """MCP 기반 도구를 포함한 범용 에이전트.
+    
+    다양한 작업을 처리할 수 있는 범용 에이전트로, 로컬 도구와 
+    MCP 기반 원격 도구를 모두 지원합니다.
+    """
 
     name: str = "Manus"
     description: str = "A versatile agent that can solve various tasks using multiple tools including MCP-based tools"
@@ -27,10 +37,10 @@ class Manus(ToolCallAgent):
     max_observe: int = 10000
     max_steps: int = 20
 
-    # MCP clients for remote tool access
+    # MCP 클라이언트 (MCPMixin에서 필요)
     mcp_clients: MCPClients = Field(default_factory=MCPClients)
 
-    # Add general-purpose tools to the tool collection
+    # 도구 모음
     available_tools: ToolCollection = Field(
         default_factory=lambda: ToolCollection(
             PlanningTool(),
@@ -45,101 +55,30 @@ class Manus(ToolCallAgent):
     special_tool_names: list[str] = Field(default_factory=lambda: [Terminate().name])
     browser_context_helper: Optional[BrowserContextHelper] = None
 
-    # Track connected MCP servers
-    connected_servers: Dict[str, str] = Field(
-        default_factory=dict
-    )  # server_id -> url/command
-    _initialized: bool = False
-
     @model_validator(mode="after")
     def initialize_helper(self) -> "Manus":
-        """Initialize basic components synchronously."""
+        """기본 컴포넌트를 동기적으로 초기화합니다."""
         self.browser_context_helper = BrowserContextHelper(self)
         return self
 
     @classmethod
     async def create(cls, **kwargs) -> "Manus":
-        """Factory method to create and properly initialize a Manus instance."""
+        """Manus 인스턴스를 생성하고 초기화하는 팩토리 메서드."""
         instance = cls(**kwargs)
         await instance.initialize_mcp_servers()
         instance._initialized = True
         return instance
 
-    async def initialize_mcp_servers(self) -> None:
-        """Initialize connections to configured MCP servers."""
-        for server_id, server_config in config.mcp_config.servers.items():
-            try:
-                if server_config.type == "sse":
-                    if server_config.url:
-                        await self.connect_mcp_server(server_config.url, server_id)
-                        logger.info(
-                            f"Connected to MCP server {server_id} at {server_config.url}"
-                        )
-                elif server_config.type == "stdio":
-                    if server_config.command:
-                        await self.connect_mcp_server(
-                            server_config.command,
-                            server_id,
-                            use_stdio=True,
-                            stdio_args=server_config.args,
-                        )
-                        logger.info(
-                            f"Connected to MCP server {server_id} using command {server_config.command}"
-                        )
-            except Exception as e:
-                logger.error(f"Failed to connect to MCP server {server_id}: {e}")
-
-    async def connect_mcp_server(
-        self,
-        server_url: str,
-        server_id: str = "",
-        use_stdio: bool = False,
-        stdio_args: List[str] = None,
-    ) -> None:
-        """Connect to an MCP server and add its tools."""
-        if use_stdio:
-            await self.mcp_clients.connect_stdio(
-                server_url, stdio_args or [], server_id
-            )
-            self.connected_servers[server_id or server_url] = server_url
-        else:
-            await self.mcp_clients.connect_sse(server_url, server_id)
-            self.connected_servers[server_id or server_url] = server_url
-
-        # Update available tools with only the new tools from this server
-        new_tools = [
-            tool for tool in self.mcp_clients.tools if tool.server_id == server_id
-        ]
-        self.available_tools.add_tools(*new_tools)
-
-    async def disconnect_mcp_server(self, server_id: str = "") -> None:
-        """Disconnect from an MCP server and remove its tools."""
-        await self.mcp_clients.disconnect(server_id)
-        if server_id:
-            self.connected_servers.pop(server_id, None)
-        else:
-            self.connected_servers.clear()
-
-        # Rebuild available tools without the disconnected server's tools
-        base_tools = [
-            tool
-            for tool in self.available_tools.tools
-            if not isinstance(tool, MCPClientTool)
-        ]
-        self.available_tools = ToolCollection(*base_tools)
-        self.available_tools.add_tools(*self.mcp_clients.tools)
-
     async def cleanup(self):
-        """Clean up Manus agent resources."""
+        """Manus 에이전트 리소스를 정리합니다."""
         if self.browser_context_helper:
             await self.browser_context_helper.cleanup_browser()
-        # Disconnect from all MCP servers only if we were initialized
         if self._initialized:
             await self.disconnect_mcp_server()
             self._initialized = False
 
     async def think(self) -> bool:
-        """Process current state and decide next actions with appropriate context."""
+        """현재 상태를 처리하고 적절한 컨텍스트와 함께 다음 작업을 결정합니다."""
         if not self._initialized:
             await self.initialize_mcp_servers()
             self._initialized = True
@@ -160,7 +99,7 @@ class Manus(ToolCallAgent):
 
         result = await super().think()
 
-        # Restore original prompt
+        # 원래 프롬프트 복원
         self.next_step_prompt = original_prompt
 
         return result

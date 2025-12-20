@@ -9,23 +9,22 @@ from typing import Optional
 
 from pydantic import Field, model_validator
 
-from app.agent.browser import BrowserContextHelper
+from app.agent.browser_helper import BrowserContextHelper
+from app.agent.mcp_mixin import MCPMixin
 from app.agent.toolcall import ToolCallAgent
 from app.config import config
-from app.logger import logger
 from app.prompt.bloom_prompt import SYSTEM_PROMPT, NEXT_STEP_PROMPT
 from app.tool import PlanningTool, Terminate, ToolCollection
 from app.tool.ask_human import AskHuman
 from app.tool.browser_use_tool import BrowserUseTool
 from app.tool.context_packager import ContextPackager
-from app.tool.mcp import MCPClients, MCPClientTool
+from app.tool.mcp import MCPClients
 from app.tool.python_execute import PythonExecute
 from app.tool.str_replace_editor import StrReplaceEditor
 
 
-class JeongongBloom(ToolCallAgent):
-    """
-    Jeongong Bloom (정공블룸) - Vibe Coding을 위한 AI 설계 에이전트.
+class JeongongBloom(MCPMixin, ToolCallAgent):
+    """Jeongong Bloom (정공블룸) - Vibe Coding을 위한 AI 설계 에이전트.
     
     이 에이전트의 전문 분야:
     1. 추상적인 프로젝트 아이디어 이해
@@ -46,7 +45,7 @@ class JeongongBloom(ToolCallAgent):
     max_observe: int = 15000  # 더 큰 컨텍스트를 위해 증가
     max_steps: int = 30  # 복잡한 아키텍처를 위해 더 많은 단계
 
-    # MCP 클라이언트 (원격 도구 접근용)
+    # MCP 클라이언트 (MCPMixin에서 필요)
     mcp_clients: MCPClients = Field(default_factory=MCPClients)
 
     # JeongongBloom 도구 모음 - ContextPackager 포함
@@ -64,7 +63,6 @@ class JeongongBloom(ToolCallAgent):
 
     special_tool_names: list[str] = Field(default_factory=lambda: [Terminate().name])
     browser_context_helper: Optional[BrowserContextHelper] = None
-    _initialized: bool = False
 
     @model_validator(mode="after")
     def initialize_helper(self) -> "JeongongBloom":
@@ -80,66 +78,8 @@ class JeongongBloom(ToolCallAgent):
         instance._initialized = True
         return instance
 
-    async def initialize_mcp_servers(self) -> None:
-        """Initialize connections to configured MCP servers."""
-        for server_id, server_config in config.mcp_config.servers.items():
-            try:
-                if server_config.type == "sse":
-                    if server_config.url:
-                        await self.connect_mcp_server(server_config.url, server_id)
-                        logger.info(
-                            f"Connected to MCP server {server_id} at {server_config.url}"
-                        )
-                elif server_config.type == "stdio":
-                    if server_config.command:
-                        await self.connect_mcp_server(
-                            server_config.command,
-                            server_id,
-                            use_stdio=True,
-                            stdio_args=server_config.args,
-                        )
-                        logger.info(
-                            f"Connected to MCP server {server_id} using command {server_config.command}"
-                        )
-            except Exception as e:
-                logger.error(f"Failed to connect to MCP server {server_id}: {e}")
-
-    async def connect_mcp_server(
-        self,
-        server_url: str,
-        server_id: str = "",
-        use_stdio: bool = False,
-        stdio_args: list = None,
-    ) -> None:
-        """Connect to an MCP server and add its tools."""
-        if use_stdio:
-            await self.mcp_clients.connect_stdio(
-                server_url, stdio_args or [], server_id
-            )
-        else:
-            await self.mcp_clients.connect_sse(server_url, server_id)
-
-        # Update available tools with the new tools from this server
-        new_tools = [
-            tool for tool in self.mcp_clients.tools if tool.server_id == server_id
-        ]
-        self.available_tools.add_tools(*new_tools)
-
-    async def disconnect_mcp_server(self, server_id: str = "") -> None:
-        """Disconnect from an MCP server and remove its tools."""
-        await self.mcp_clients.disconnect(server_id)
-
-        # Rebuild available tools without the disconnected server's tools
-        base_tools = [
-            tool
-            for tool in self.available_tools.tools
-            if not isinstance(tool, MCPClientTool)
-        ]
-        self.available_tools = ToolCollection(*base_tools)
-        self.available_tools.add_tools(*self.mcp_clients.tools)
-
     async def cleanup(self):
-        """Clean up VibeManus agent resources."""
+        """JeongongBloom 에이전트 리소스를 정리합니다."""
         if self.browser_context_helper:
             await self.browser_context_helper.cleanup_browser()
         if self._initialized:
@@ -147,7 +87,7 @@ class JeongongBloom(ToolCallAgent):
             self._initialized = False
 
     async def think(self) -> bool:
-        """Process current state and decide next actions with appropriate context."""
+        """현재 상태를 처리하고 적절한 컨텍스트와 함께 다음 작업을 결정합니다."""
         if not self._initialized:
             await self.initialize_mcp_servers()
             self._initialized = True
@@ -168,7 +108,7 @@ class JeongongBloom(ToolCallAgent):
 
         result = await super().think()
 
-        # Restore original prompt
+        # 원래 프롬프트 복원
         self.next_step_prompt = original_prompt
 
         return result
