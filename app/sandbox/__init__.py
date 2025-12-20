@@ -1,30 +1,16 @@
 """
-Docker Sandbox Module
+Sandbox 모듈
+============
+코드 실행을 위한 샌드박스 환경을 제공합니다.
 
-Provides secure containerized execution environment with resource limits
-and isolation for running untrusted code.
+포함 내용:
+- client: 샌드박스 클라이언트
+- core: 샌드박스 핵심 기능 (manager, terminal, sandbox, exceptions)
 """
-from app.sandbox.client import (
-    BaseSandboxClient,
-    LocalSandboxClient,
-    create_sandbox_client,
-)
-from app.sandbox.core.exceptions import (
-    SandboxError,
-    SandboxResourceError,
-    SandboxTimeoutError,
-)
-from app.sandbox.core.manager import SandboxManager
-from app.sandbox.core.sandbox import DockerSandbox
+
+from app.sandbox.client import SANDBOX_CLIENT
 
 
 __all__ = [
-    "DockerSandbox",
-    "SandboxManager",
-    "BaseSandboxClient",
-    "LocalSandboxClient",
-    "create_sandbox_client",
-    "SandboxError",
-    "SandboxTimeoutError",
-    "SandboxResourceError",
+    "SANDBOX_CLIENT",
 ]

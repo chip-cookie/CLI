@@ -1,1 +1,25 @@
-# Utility functions and constants for agent tools
+"""
+Utils 모듈
+==========
+유틸리티 함수들과 상수들을 포함합니다.
+
+포함 내용:
+- files_utils: 파일 경로 처리 및 필터링 유틸리티
+"""
+
+from app.utils.files_utils import (
+    EXCLUDED_DIRS,
+    EXCLUDED_EXT,
+    EXCLUDED_FILES,
+    clean_path,
+    should_exclude_file,
+)
+
+
+__all__ = [
+    "EXCLUDED_DIRS",
+    "EXCLUDED_EXT",
+    "EXCLUDED_FILES",
+    "clean_path",
+    "should_exclude_file",
+]

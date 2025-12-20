@@ -361,7 +361,15 @@ class Config:
     @property
     def workspace_root(self) -> Path:
         """Get the workspace root directory"""
-        return WORKSPACE_ROOT
+        if not hasattr(self, "_workspace_root"):
+            self._workspace_root = WORKSPACE_ROOT
+        return self._workspace_root
+
+    def set_workspace_root(self, path: Path) -> None:
+        """Set the workspace root directory"""
+        self._workspace_root = path
+        if not self._workspace_root.exists():
+            self._workspace_root.mkdir(parents=True, exist_ok=True)
 
     @property
     def root_path(self) -> Path:
