@@ -1,6 +1,6 @@
 """
-Jeongong Bloom (정공블룸) 에이전트
-==================================
+Manus Interactive Agent
+=======================
 "Vibe Coding"을 위한 전문 에이전트 - 웹 AI 빌더에
 원활하게 전달할 수 있는 AI-Ready 컨텍스트 패키지를 생성합니다.
 
@@ -33,7 +33,7 @@ from app.tool.str_replace_editor import StrReplaceEditor
 
 
 class JeongongBloom(MCPMixin, ToolCallAgent):
-    """Jeongong Bloom (정공블룸) - Vibe Coding을 위한 AI 설계 에이전트.
+    """OpenManus Interactive Architect - Vibe Coding을 위한 AI 설계 에이전트.
     
     이 에이전트의 전문 분야:
     1. 추상적인 프로젝트 아이디어 이해
@@ -47,7 +47,7 @@ class JeongongBloom(MCPMixin, ToolCallAgent):
     - 최종 Y/N 확인 후 패키지 생성
     """
 
-    name: str = "JeongongBloom"
+    name: str = "ManusInteractive"
     description: str = (
         "풀스택 프로젝트를 설계하고 웹 AI 빌더에 원활하게 전달할 수 있는 "
         "AI-Ready 컨텍스트 패키지를 생성하는 전문 AI 설계자입니다."
@@ -62,7 +62,7 @@ class JeongongBloom(MCPMixin, ToolCallAgent):
     # MCP 클라이언트 (MCPMixin에서 필요)
     mcp_clients: MCPClients = Field(default_factory=MCPClients)
 
-    # JeongongBloom 도구 모음 - DesignDocumentTool 추가
+    # 도구 모음 - DesignDocumentTool 포함
     available_tools: ToolCollection = Field(
         default_factory=lambda: ToolCollection(
             PlanningTool(),
@@ -92,14 +92,14 @@ class JeongongBloom(MCPMixin, ToolCallAgent):
 
     @classmethod
     async def create(cls, **kwargs) -> "JeongongBloom":
-        """JeongongBloom 인스턴스를 생성하고 초기화하는 팩토리 메서드."""
+        """인스턴스를 생성하고 초기화하는 팩토리 메서드."""
         instance = cls(**kwargs)
         await instance.initialize_mcp_servers()
         instance._initialized = True
         return instance
 
     async def cleanup(self):
-        """JeongongBloom 에이전트 리소스를 정리합니다."""
+        """에이전트 리소스를 정리합니다."""
         if self.browser_context_helper:
             await self.browser_context_helper.cleanup_browser()
         if self._initialized:

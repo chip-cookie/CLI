@@ -1,18 +1,18 @@
-# 🌸 Jeongong Bloom (정공블룸)
-> **AI-Powered Vibe Coding Assistant** for Next-Gen Development
+# 🤖 OpenManus (Interactive Edition)
+> **Agentic AI Coding Assistant** with Vibe Coding Workflow
 
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue?style=for-the-badge&logo=python)
 ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
 ![Agentic](https://img.shields.io/badge/Agentic-Framework-purple?style=for-the-badge)
 
-**Jeongong Bloom**은 단순한 코딩 도구가 아닌, 추상적인 아이디어를 실행 가능한 **AI-Ready Context Package**로 변환하는 지능형 설계 에이전트입니다.
+**OpenManus Interactive**는 [OpenManus](https://github.com/mannaandpoem/OpenManus)를 기반으로 확장된 커스텀 버전입니다. 추상적인 아이디어를 실행 가능한 **AI-Ready Context Package**로 변환하는 인터랙티브 설계 워크플로우를 제공합니다.
 
 ---
 
 ## ✨ Key Features
 
-### 🧠 Intelligent Design Flow
-- **5-Step Interactive Workflow**: 요구사항 → 백엔드 → 프론트엔드 → 통합 → 최종 검토
+### 🧠 Interactive Design Flow
+- **5-Step Workflow**: 요구사항 → 백엔드 → 프론트엔드 → 통합 → 최종 검토
 - **Real-time Feedback**: "MySQL 말고 SQLite로 변경해"와 같은 자연어 명령 즉시 반영
 - **Architectural Planning**: 단순 코드가 아닌 전체 시스템 아키텍처를 설계
 
@@ -34,8 +34,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-username/jeongong-bloom.git
-cd jeongong-bloom
+git clone https://github.com/mannaandpoem/OpenManus.git
+cd OpenManus
 
 # 2. Install dependencies
 pip install -r requirements.txt
@@ -62,7 +62,7 @@ python main.py --prompt "Create a Todo List app with FastAPI" --project "todo_v1
 
 ## 🏗️ System Architecture
 
-Jeongong Bloom은 모듈성과 확장성을 최우선으로 설계되었습니다.
+이 프로젝트는 모듈성과 확장성을 최우선으로 설계되었습니다.
 
 ```mermaid
 graph TD
@@ -95,13 +95,13 @@ graph TD
 
 ---
 
-## 💡 Why "Vibe Coding"?
+## 💡 Vision
 
 코딩은 더 이상 문법과의 싸움이 아닙니다. **흐름(Vibe)**과 **의도(Intent)**의 표현입니다.
-Jeongong Bloom은 당신의 '바이브'를 이해하고, 이를 정교한 소프트웨어 아키텍처로 구현합니다.
+Manus Interactive는 당신의 의도를 이해하고, 이를 정교한 소프트웨어 아키텍처로 구현합니다.
 
 ---
 
 <div align="center">
-  <sub>Built with ❤️ by Jeongong Bloom Team</sub>
+  <sub>Open Source Project</sub>
 </div>

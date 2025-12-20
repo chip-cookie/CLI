@@ -13,8 +13,8 @@ from app.tool.base import BaseTool, ToolResult
 class DesignDocumentTool(BaseTool):
     """설계 문서를 관리하는 도구.
     
-    JeongongBloom 에이전트가 설계 문서를 단계별로 작성하고
-    사용자 피드백에 따라 수정할 수 있게 합니다.
+    OpenManus Interactive Architect 에이전트가 설계 문서를 단계별로 작성하고
+    관리하는 데 사용하는 도구입니다.
     """
     
     name: str = "design_document"

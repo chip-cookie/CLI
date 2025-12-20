@@ -4,8 +4,8 @@
 
 ```
 CLI/
-├── 📄 main.py              # Manus 에이전트 실행 진입점
-├── 📄 run_bloom.py         # JeongongBloom 에이전트 실행 진입점
+├── 📄 main.py              # Manus 에이전트 실행 진입점 (기본)
+├── 📄 run_bloom.py         # 인터랙티브 모드 실행 진입점
 ├── 📄 requirements.txt     # Python 의존성
 ├── 📄 README.md
 │
@@ -31,7 +31,7 @@ CLI/
     │   ├── design_phases.py     # 설계 단계 정의
     │   ├── checkpoint_handler.py # 체크포인트 핸들러
     │   ├── manus.py             # Manus 범용 에이전트
-    │   ├── bloom_agent.py       # JeongongBloom 설계 에이전트
+    │   ├── bloom_agent.py       # 인터랙티브 설계 에이전트
     │   ├── browser.py           # BrowserAgent
     │   ├── mcp.py               # MCPAgent
     │   ├── swe.py               # SWEAgent
@@ -60,7 +60,7 @@ CLI/
     │   └── flow_factory.py      # FlowFactory
     │
     ├── 📁 prompt/          # 프롬프트 템플릿
-    │   ├── bloom_prompt.py      # JeongongBloom 프롬프트
+    │   ├── bloom_prompt.py      # 설계 에이전트 프롬프트
     │   ├── manus.py             # Manus 프롬프트
     │   ├── browser.py           # Browser 프롬프트
     │   └── ...
@@ -88,7 +88,7 @@ BaseAgent (추상)
     └── ReActAgent (추상, think/act 패턴)
             └── ToolCallAgent (도구 호출 기능)
                     ├── Manus (범용 에이전트)
-                    ├── JeongongBloom (Vibe Coding)
+                    ├── JeongongBloom (인터랙티브 에이전트)
                     ├── BrowserAgent (브라우저)
                     └── MCPAgent (MCP)
 ```
@@ -121,6 +121,6 @@ BrowserContextHelper ─┬──→ Manus
 # Manus 에이전트 (범용)
 python main.py --prompt "작업 내용"
 
-# JeongongBloom 에이전트 (Vibe Coding)
+# 인터랙티브 모드 (Vibe Coding)
 python run_bloom.py
 ```

@@ -1,7 +1,7 @@
 """
-Jeongong Bloom (정공블룸) - Vibe Coding CLI
-=============================================
-Jeongong Bloom CLI의 메인 엔트리 포인트.
+Manus Interactive CLI
+=====================
+Manus 에이전트의 인터랙티브 모드 실행 엔트리 포인트.
 AI 기반 설계 에이전트로 "AI-Ready Context Package"를 생성합니다.
 """
 
@@ -14,10 +14,10 @@ from app.logger import logger
 
 
 async def run_bloom():
-    """Jeongong Bloom 에이전트를 Vibe Coding 워크플로우로 실행합니다."""
+    """Manus 에이전트를 인터랙티브 모드로 실행합니다."""
     
     print("\n" + "=" * 60)
-    print("🌸 Jeongong Bloom (정공블룸) - Vibe Coding CLI")
+    print("🤖 Manus Interactive CLI")
     print("=" * 60)
     print("\n웹 AI 빌더(v0, Bolt, ChatGPT 등)에 최적화된")
     print("코드 패키지를 생성하는 AI 설계자입니다.\n")
@@ -29,7 +29,6 @@ async def run_bloom():
         project_name = "default"
         
     # 워크스페이스 설정
-    # 기본 workspace 폴더 아래에 projects/폴더명 으로 생성
     project_dir = config.workspace_root / "projects" / project_name
     config.set_workspace_root(project_dir)
     print(f"📂 작업 디렉토리: {project_dir}")
@@ -39,7 +38,7 @@ async def run_bloom():
     print("종료하려면 'exit' 또는 'quit'을 입력하세요.\n")
     print("-" * 60 + "\n")
     
-    # 팩토리 메서드에서 초기화 시 config.workspace_root (업데이트된 값)를 사용
+    # 팩토리 메서드 사용
     agent = await JeongongBloom.create()
     
     try:
@@ -53,7 +52,7 @@ async def run_bloom():
                 continue
             
             if user_input.lower() in ['exit', 'quit', 'q', '종료']:
-                print("\n👋 Jeongong Bloom을 이용해주셔서 감사합니다! 즐거운 코딩하세요!\n")
+                print("\n👋 Manus를 이용해주셔서 감사합니다! 즐거운 코딩하세요!\n")
                 break
             
             print("\n🔄 요청을 처리하고 있습니다...\n")
@@ -61,7 +60,7 @@ async def run_bloom():
             try:
                 result = await agent.run(user_input)
                 print("\n" + "=" * 60)
-                print("✅ Jeongong Bloom 출력")
+                print("✅ Manus 출력")
                 print("=" * 60)
                 print(result if result else "작업이 완료되었습니다!")
                 print("\n" + "-" * 60 + "\n")
