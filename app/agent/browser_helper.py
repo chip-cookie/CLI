@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 class BrowserContextHelper:
     """브라우저 상태 관리를 담당하는 헬퍼 클래스.
     
-    여러 에이전트(BrowserAgent, Manus, JeongongBloom)에서 공유되어
+    여러 에이전트(BrowserAgent, Manus, InteractiveAgent)에서 공유되어
     브라우저 상태 조회 및 프롬프트 포맷팅을 처리합니다.
     
     Attributes:

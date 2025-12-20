@@ -49,7 +49,7 @@ cp config/config.example.toml config/config.toml
 
 **Interactive Mode (Recommended)**
 ```bash
-python run_bloom.py
+python run_interactive.py
 ```
 > 실행 후 프로젝트 이름을 입력하면, 전용 워크스페이스에서 설계가 시작됩니다.
 

@@ -1,17 +1,22 @@
 """
-Prompt 모듈
-===========
-각 에이전트에 대한 시스템 프롬프트와 다음 단계 프롬프트를 정의합니다.
+Prompt 패키지
+=============
+에이전트별 시스템 프롬프트와 메시지 템플릿을 포함합니다.
 
-사용법:
-    from app.prompt import manus
-    system_prompt = manus.SYSTEM_PROMPT
-    next_step_prompt = manus.NEXT_STEP_PROMPT
+포함 내용:
+- manus: Manus 에이전트 프롬프트
+- interactive_prompt: 인터랙티브 설계 에이전트 프롬프트
+- browser: 브라우저 에이전트 프롬프트
+- mcp: MCP 에이전트 프롬프트
+- planning: 계획 도구 프롬프트
+- swe: SWE 에이전트 프롬프트
+- toolcall: 도구호출 에이전트 프롬프트
+- visualization: 시각화 프롬프트
 """
 
 from app.prompt import (
-    bloom_prompt,
     browser,
+    interactive_prompt,
     manus,
     mcp,
     planning,
@@ -22,8 +27,8 @@ from app.prompt import (
 
 
 __all__ = [
-    "bloom_prompt",
     "browser",
+    "interactive_prompt",
     "manus",
     "mcp",
     "planning",
