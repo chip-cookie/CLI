@@ -5,91 +5,43 @@
 ```
 CLI/
 ├── 📄 main.py                  # Manus 에이전트 실행 (기본)
-├── 📄 run_interactive.py       # 인터랙티브 모드 실행
+├── 📄 run_interactive.py       # 인터랙티브 모드 실행 (Clone & Evolve)
 ├── 📄 requirements.txt         # Python 의존성
 ├── 📄 README.md
 │
 ├── 📁 config/                  # 설정 파일
-│   ├── config.toml             # 메인 설정 (API 키 등)
-│   └── mcp.json                # MCP 서버 설정
+├── 📁 app/                     # 메인 애플리케이션
+│   ├── 📁 agent/               # AI 에이전트 (InteractiveAgent, Manus 등)
+│   ├── 📁 tool/                # 도구 모듈
+│   ├── 📁 prompt/              # 프롬프트
+│   └── 📁 utils/               # 유틸리티
+│       ├── files_utils.py      # 파일 처리
+│       └── git_utils.py        # Git 복제 및 관리
 │
-└── 📁 app/                     # 메인 애플리케이션
-    ├── __init__.py             # 패키지 초기화
-    ├── config.py               # 설정 관리
-    ├── llm.py                  # LLM 클라이언트
-    ├── logger.py               # 로깅
-    ├── schema.py               # 데이터 스키마
-    ├── exceptions.py           # 예외 처리
-    │
-    ├── 📁 agent/               # AI 에이전트
-    │   ├── base.py                  # BaseAgent
-    │   ├── react.py                 # ReActAgent
-    │   ├── toolcall.py              # ToolCallAgent
-    │   ├── mcp_mixin.py             # MCPMixin
-    │   ├── browser_helper.py        # BrowserContextHelper
-    │   ├── design_phases.py         # 설계 단계 정의
-    │   ├── checkpoint_handler.py    # 체크포인트 핸들러
-    │   ├── manus.py                 # Manus 범용 에이전트
-    │   ├── interactive_agent.py     # InteractiveAgent
-    │   ├── browser.py               # BrowserAgent
-    │   ├── mcp.py                   # MCPAgent
-    │   └── swe.py                   # SWEAgent
-    │
-    ├── 📁 tool/                # 도구 모듈
-    │   ├── base.py                  # BaseTool
-    │   ├── tool_collection.py       # ToolCollection
-    │   ├── design_document.py       # 설계 문서 도구
-    │   ├── planning.py              # 계획 도구
-    │   ├── context_packager.py      # 컨텍스트 패키저
-    │   ├── browser_use_tool.py      # 브라우저 도구
-    │   ├── python_execute.py        # Python 실행
-    │   ├── str_replace_editor.py    # 파일 에디터
-    │   └── ...
-    │
-    ├── 📁 flow/                # 실행 흐름
-    │   ├── base.py
-    │   ├── planning.py
-    │   └── flow_factory.py
-    │
-    ├── 📁 prompt/              # 프롬프트 템플릿
-    │   ├── interactive_prompt.py    # 인터랙티브 에이전트
-    │   ├── manus.py                 # Manus 에이전트
-    │   └── ...
-    │
-    ├── 📁 mcp/                 # MCP 서버
-    ├── 📁 sandbox/             # 샌드박스
-    └── 📁 utils/               # 유틸리티
+└── 📁 workspace/               # 작업 공간 (자동 생성)
+    └── 📁 projects/
+        ├── 📁 web/             # 웹 프로젝트
+        ├── 📁 app/             # 앱 프로젝트
+        └── 📁 gui/             # GUI/Desktop 프로젝트
 ```
 
-## 🏗️ 계층 구조
+## 🏗️ 주요 기능 및 모듈
 
-### Agent 계층
-```
-BaseAgent (추상)
-    └── ReActAgent (think/act)
-            └── ToolCallAgent (도구 호출)
-                    ├── Manus (범용)
-                    ├── InteractiveAgent (인터랙티브)
-                    ├── BrowserAgent
-                    └── MCPAgent
-```
+### 1. 인터랙티브 실행 (`run_interactive.py`)
+- **프로젝트 생성 마법사**: 이름, 소스(New/GitHub), 타입을 단계별로 선택.
+- **자동 분류**: 선택한 타입에 따라 폴더를 자동 생성하고 분류.
+- **Git 통합**: `git_utils`를 사용하여 외부 레포지토리를 가져오고 분석 모드로 시작.
 
-### Mixin 구조
-```
-MCPMixin ─────┬──→ Manus
-              └──→ InteractiveAgent
-
-BrowserContextHelper ─┬──→ Manus
-                      ├──→ InteractiveAgent
-                      └──→ BrowserAgent
-```
+### 2. 유틸리티 확장 (`app/utils/`)
+- `git_utils.py`: Git 설치 확인, URL 파싱, Clone 기능 제공.
 
 ## ⚙️ 실행 방법
 
 ```bash
 # 인터랙티브 모드 (권장)
 python run_interactive.py
+# -> 메뉴에 따라 선택 진행
 
 # 범용 모드
-python main.py --prompt "작업 내용" --project "프로젝트명"
+python main.py --prompt "작업 내용"
 ```
