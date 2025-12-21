@@ -24,6 +24,12 @@
    - **기능**: 복잡한 인자 없이 `python run_interactive.py` 실행만으로 프로젝트 설정부터 에이전트 실행까지 위자드(Wizard) 형태로 진행됩니다.
    - **호환성**: Windows 콘솔(cmd, powershell)에서의 깨짐 방지를 위해 이모지 대신 ASCII 문자를 사용하도록 개선되었습니다.
 
+### 4. **Python 3.11 Complete Migration** (Latest)
+   - **업그레이드**: Python 3.9의 호환성 한계를 극복하기 위해 **Python 3.11 기반 가상환경(.venv)**으로 완전히 전환했습니다.
+   - **기능 복구**: 제외되었던 `browser-use` 및 `mcp` 라이브러리가 정상 설치되어 모든 기능을 100% 활용할 수 있습니다.
+   - **편의성**: `run.bat` 스크립트를 통해 가상환경 활성화 + 실행을 원클릭으로 처리합니다.
+
+
 ---
 
 ## 🔧 호환성 및 안정성 패치 (Compatibility Fixes)

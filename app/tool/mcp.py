@@ -1,21 +1,10 @@
 from contextlib import AsyncExitStack
 from typing import Dict, List, Optional
 
-try:
-    from mcp import ClientSession, StdioServerParameters
-    from mcp.client.sse import sse_client
-    from mcp.client.stdio import stdio_client
-    from mcp.types import ListToolsResult, TextContent
-    _HAS_MCP = True
-except ImportError:
-    _HAS_MCP = False
-    class ClientSession: pass
-    class StdioServerParameters: pass
-    class ListToolsResult:
-        def __init__(self, tools=None): self.tools = tools or []
-    class TextContent: pass
-    def sse_client(*args, **kwargs): pass
-    def stdio_client(*args, **kwargs): pass
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.sse import sse_client
+from mcp.client.stdio import stdio_client
+from mcp.types import ListToolsResult, TextContent
 
 
 from app.logger import logger

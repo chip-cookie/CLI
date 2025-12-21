@@ -41,12 +41,31 @@
 git clone https://github.com/mannaandpoem/OpenManus.git
 cd OpenManus
 
-# 2. Install dependencies
+# 2. Setup Virtual Environment (Python 3.11 Recommended)
+py -3.11 -m venv .venv
+
+# 3. Install dependencies
+.venv\Scripts\activate
 pip install -r requirements.txt
 
-# 3. Configure environment
-cp config/config.example.toml config/config.toml
+# 4. Configure environment
+copy config/config.example.toml config/config.toml
+# Open config/config.toml and set your API key
 ```
+
+## 💻 Usage (Interactive Mode)
+
+Use the provided batch script for easy execution:
+
+```bash
+run.bat
+```
+
+Or manually:
+```bash
+.venv\Scripts\python run_interactive.py
+```
+
 
 ---
 
