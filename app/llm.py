@@ -1,4 +1,6 @@
-import math
+from __future__ import annotations
+
+import ast
 from typing import Dict, List, Optional, Union
 
 import tiktoken

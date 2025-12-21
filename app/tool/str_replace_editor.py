@@ -1,6 +1,9 @@
 """File and directory manipulation tool with sandbox support."""
 
+from __future__ import annotations
+
 from collections import defaultdict
+
 from pathlib import Path
 from typing import Any, DefaultDict, List, Literal, Optional, get_args
 

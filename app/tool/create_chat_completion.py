@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from typing import Any, List, Optional, Type, Union, get_args, get_origin
+
 
 from pydantic import BaseModel, Field
 

@@ -1,14 +1,27 @@
+from __future__ import annotations
+
 import asyncio
 import base64
 import json
 from typing import Generic, Optional, TypeVar
 
-from browser_use import Browser as BrowserUseBrowser
-from browser_use import BrowserConfig
-from browser_use.browser.context import BrowserContext, BrowserContextConfig
-from browser_use.dom.service import DomService
+try:
+    from browser_use import Browser as BrowserUseBrowser
+    from browser_use import BrowserConfig
+    from browser_use.browser.context import BrowserContext, BrowserContextConfig
+    from browser_use.dom.service import DomService
+    _HAS_BROWSER_USE = True
+except ImportError:
+    _HAS_BROWSER_USE = False
+    class BrowserUseBrowser: pass
+    class BrowserConfig: pass
+    class BrowserContext: pass
+    class BrowserContextConfig: pass
+    class DomService: pass
+
 from pydantic import Field, field_validator
 from pydantic_core.core_schema import ValidationInfo
+
 
 from app.config import config
 from app.llm import LLM
